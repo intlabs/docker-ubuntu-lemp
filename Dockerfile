@@ -66,8 +66,8 @@ ADD supervisor_conf/php.conf /etc/supervisor/conf.d/php.conf
 ADD supervisor_conf/nginx.conf /etc/supervisor/conf.d/nginx.conf
 
 # default command
-CMD bash
-#CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+#CMD bash
+CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
 
 
 # Define mountable directories.
