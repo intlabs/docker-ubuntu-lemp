@@ -50,7 +50,7 @@ RUN echo '<?php phpinfo(); ?>' > /usr/share/nginx/html/phpinfo.php
 RUN rm -f /etc/nginx/sites-available/default
 ADD https://raw.githubusercontent.com/intlabs/docker-ubuntu-lemp/master/nginx-default-server /etc/nginx/sites-available/default
 
-#RUN sed -i 's/cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g’ /etc/php5/fpm/php.ini
+RUN sed -i 's/cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php5/fpm/php.ini
 
 # supervisor installation && 
 # create directory for child images to store configuration in
@@ -60,6 +60,10 @@ RUN apt-get -y install supervisor && \
 
 # supervisor base configuration
 ADD supervisor.conf /etc/supervisor.conf
+
+# supervisor services configuration
+ADD supervisor/php.conf /etc/supervisor/conf.d/php.conf
+ADD supervisor/nginx.conf /etc/supervisor/conf.d/nginx.conf
 
 # default command
 CMD bash
