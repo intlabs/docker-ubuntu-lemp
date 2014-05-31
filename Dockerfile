@@ -87,7 +87,5 @@ EXPOSE 80
 RUN rm /usr/share/nginx/html/index.html
 #RUN echo '<?php phpinfo(); ?>' > /usr/share/nginx/html/index.php
 RUN apt-get install git -y
-RUN git clone https://github.com/symbiose/symbiose.git
-RUN mv symbiose/* /usr/share/nginx/html
-RUN rm -r -f symbiose
+RUN git clone https://github.com/symbiose/symbiose.git && mv symbiose/* /usr/share/nginx/html && rm -r -f symbiose
 RUN apt-get purge git -y
