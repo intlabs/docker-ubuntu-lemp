@@ -17,6 +17,10 @@ FROM ubuntu:14.04
 
 # Setup enviroment variables
 ENV DEBIAN_FRONTEND noninteractive
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
+ENV HOME /root
 
 #Update the package manager and upgrade the system
 RUN apt-get update && \
@@ -49,6 +53,19 @@ RUN echo '<?php phpinfo(); ?>' > /usr/share/nginx/html/phpinfo.php
 RUN rm -f /etc/nginx/sites-available/default
 ADD https://raw.githubusercontent.com/intlabs/docker-ubuntu-lemp/master/nginx-default-server /etc/nginx/sites-available/default
 
+RUN sed -i 's/cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g’ /etc/php5/fpm/php.ini
+
+# supervisor installation && 
+# create directory for child images to store configuration in
+RUN apt-get -y install supervisor && \
+  mkdir -p /var/log/supervisor && \
+  mkdir -p /etc/supervisor/conf.d
+
+# supervisor base configuration
+ADD supervisor.conf /etc/supervisor.conf
+
+# default command
+CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
 
 
 # Define mountable directories.
@@ -56,9 +73,6 @@ VOLUME ["/data"]
 
 # Define working directory.
 WORKDIR /data
-
-# Define default command.
-CMD bash
 
 # Expose ports.
 EXPOSE 80
