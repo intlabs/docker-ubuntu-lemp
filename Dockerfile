@@ -89,3 +89,7 @@ RUN rm /usr/share/nginx/html/index.html
 RUN apt-get install git -y
 RUN git clone https://github.com/symbiose/symbiose.git && mv symbiose/* /usr/share/nginx/html && rm -r -f symbiose
 RUN apt-get purge git -y
+RUN cd /usr/share/nginx/html/ && chown -R www-data .
+
+
+
