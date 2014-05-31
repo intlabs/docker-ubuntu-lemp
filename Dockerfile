@@ -62,7 +62,8 @@ RUN apt-get -y install supervisor && \
 ADD supervisor.conf /etc/supervisor.conf
 
 # default command
-CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+CMD bash
+#CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
 
 
 # Define mountable directories.
