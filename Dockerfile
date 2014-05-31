@@ -97,4 +97,6 @@ RUN git clone https://github.com/symbiose/symbiose.git && cd symbiose && npm ins
 RUN apt-get purge git -y
 RUN cd /usr/share/nginx/html/ && chown -R www-data .
 
+RUN sudo apt-get install -y php5-memcache memcached php-pear netcat build-essential php5-memcached
 
+RUN echo '<?php phpinfo(); ?>' > /usr/share/nginx/html/info.php
