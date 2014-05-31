@@ -67,7 +67,7 @@ ADD supervisor_conf/nginx.conf /etc/supervisor/conf.d/nginx.conf
 
 # default command
 #CMD bash
-CMD ['"supervisord", "-c", "/etc/supervisor/supervisord.conf"';'bash']
+CMD ['supervisord -c /etc/supervisor/supervisord.conf';'bash']
 
 
 # Define mountable directories.
