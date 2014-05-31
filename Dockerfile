@@ -35,6 +35,12 @@ RUN dpkg-divert --local --rename --add /sbin/initctl && ln -sf /bin/true /sbin/i
 # Install nginx
 RUN apt-get update && apt-get install -y nginx
 
+RUN apt-get install -y php5-fpm php5-cli php5-mysql
+
+RUN apt-get install -y mysql-server
+
+RUN echo '<?php phpinfo(); ?>' > /usr/share/nginx/html/phpinfo.php
+
 # Define mountable directories.
 VOLUME ["/data"]
 
@@ -45,5 +51,4 @@ WORKDIR /data
 CMD bash -C 'bash'
 
 # Expose ports.
-EXPOSE 5901
-EXPOSE 6080
+EXPOSE 80
