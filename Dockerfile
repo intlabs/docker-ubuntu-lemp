@@ -38,12 +38,19 @@ cd /tmp ; dpkg -i /fuse.deb
 # Upstart and DBus have issues inside docker.
 RUN dpkg-divert --local --rename --add /sbin/initctl && ln -sf /bin/true /sbin/initctl
 
+# supervisor installation && 
+# create directory for child images to store configuration in
+RUN apt-get -y install supervisor && \
+  mkdir -p /var/log/supervisor && \
+  mkdir -p /etc/supervisor/conf.d
+
 # Install nginx
 RUN apt-get update && apt-get install -y nginx
 
 # Install php5
 RUN apt-get install -y php5-fpm php5-cli php5-mysql
 
+# Install mysql
 #RUN apt-get install -y mysql-server
 
 #setup php ini file
@@ -52,12 +59,6 @@ RUN sed -i 's/cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php5/fpm/php.ini
 #Configure nginx for php
 RUN rm -f /etc/nginx/sites-available/default
 ADD https://raw.githubusercontent.com/intlabs/docker-ubuntu-lemp/master/nginx-default-server /etc/nginx/sites-available/default
-
-# supervisor installation && 
-# create directory for child images to store configuration in
-RUN apt-get -y install supervisor && \
-  mkdir -p /var/log/supervisor && \
-  mkdir -p /etc/supervisor/conf.d
 
 # supervisor base configuration
 ADD supervisor.conf /etc/supervisor.conf
