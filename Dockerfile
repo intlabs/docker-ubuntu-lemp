@@ -46,6 +46,11 @@ RUN apt-get install -y mysql-server
 
 RUN echo '<?php phpinfo(); ?>' > /usr/share/nginx/html/phpinfo.php
 
+RUN rm -f /etc/nginx/sites-available/default
+ADD https://raw.githubusercontent.com/intlabs/docker-ubuntu-lemp/nginx-default-server /etc/nginx/sites-available/default
+
+
+
 # Define mountable directories.
 VOLUME ["/data"]
 
