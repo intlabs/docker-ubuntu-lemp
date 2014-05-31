@@ -87,9 +87,14 @@ EXPOSE 80
 RUN rm /usr/share/nginx/html/index.html
 #RUN echo '<?php phpinfo(); ?>' > /usr/share/nginx/html/index.php
 RUN apt-get install git -y
-RUN git clone https://github.com/symbiose/symbiose.git && mv symbiose/* /usr/share/nginx/html && rm -r -f symbiose
+
+#Install grunt
+RUN sudo apt-get install -y nodejs npm
+RUN ln -s /usr/bin/nodejs /usr/local/bin/node
+RUN npm install -g grunt-cli
+
+RUN git clone https://github.com/symbiose/symbiose.git && cd symbiose && npm install && grunt build && mv build/* /usr/share/nginx/html && cd .. && rm -r -f symbiose
 RUN apt-get purge git -y
 RUN cd /usr/share/nginx/html/ && chown -R www-data .
-
 
 
