@@ -7,6 +7,11 @@
 # Install GNOME3 and VNC server.
 # (c) Pete Birley
 
+
+# sudo docker build -t="intlabs/docker-ubuntu-lemp" github.com/intlabs/docker-ubuntu-lemp
+# sudo docker run -it --rm -p 80:80 intlabs/docker-ubuntu-lemp
+
+
 # Pull base image.
 FROM ubuntu:14.04
 
@@ -48,7 +53,7 @@ VOLUME ["/data"]
 WORKDIR /data
 
 # Define default command.
-CMD bash -C 'bash'
+CMD bash
 
 # Expose ports.
 EXPOSE 80
