@@ -65,9 +65,11 @@ ADD supervisor.conf /etc/supervisor.conf
 ADD supervisor_conf/php.conf /etc/supervisor/conf.d/php.conf
 ADD supervisor_conf/nginx.conf /etc/supervisor/conf.d/nginx.conf
 
+
+ADD startup.sh /etc/startup.sh
+RUN chmod +x /etc/startup.sh
 # default command
-#CMD bash
-CMD bash -C 'supervisord -c /etc/supervisor/supervisord.conf';'bash'
+CMD bash -C '/etc/startup.sh';'bash'
 
 # Define mountable directories.
 VOLUME ["/data"]
