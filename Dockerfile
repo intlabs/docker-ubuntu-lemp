@@ -60,6 +60,9 @@ RUN sed -i 's/cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php5/fpm/php.ini
 RUN rm -f /etc/nginx/sites-available/default
 ADD https://raw.githubusercontent.com/intlabs/docker-ubuntu-lemp/master/nginx-default-server /etc/nginx/sites-available/default
 
+#Install memcache
+RUN sudo apt-get install -y php5-memcache memcached php-pear netcat build-essential php5-memcached
+
 # supervisor base configuration
 ADD supervisor.conf /etc/supervisor.conf
 
@@ -97,6 +100,5 @@ RUN git clone https://github.com/symbiose/symbiose.git && cd symbiose && npm ins
 RUN apt-get purge git -y
 RUN cd /usr/share/nginx/html/ && chown -R www-data .
 
-RUN sudo apt-get install -y php5-memcache memcached php-pear netcat build-essential php5-memcached
 
 RUN echo '<?php phpinfo(); ?>' > /usr/share/nginx/html/info.php
