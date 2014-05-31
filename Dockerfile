@@ -62,8 +62,8 @@ RUN apt-get -y install supervisor && \
 ADD supervisor.conf /etc/supervisor.conf
 
 # supervisor services configuration
-ADD supervisor/php.conf /etc/supervisor/conf.d/php.conf
-ADD supervisor/nginx.conf /etc/supervisor/conf.d/nginx.conf
+ADD supervisor_conf/php.conf /etc/supervisor/conf.d/php.conf
+ADD supervisor_conf/nginx.conf /etc/supervisor/conf.d/nginx.conf
 
 # default command
 CMD bash
