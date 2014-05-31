@@ -41,16 +41,17 @@ RUN dpkg-divert --local --rename --add /sbin/initctl && ln -sf /bin/true /sbin/i
 # Install nginx
 RUN apt-get update && apt-get install -y nginx
 
+# Install php5
 RUN apt-get install -y php5-fpm php5-cli php5-mysql
 
 #RUN apt-get install -y mysql-server
 
-RUN echo '<?php phpinfo(); ?>' > /usr/share/nginx/html/phpinfo.php
+#setup php ini file
+RUN sed -i 's/cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php5/fpm/php.ini
 
+#Configure nginx for php
 RUN rm -f /etc/nginx/sites-available/default
 ADD https://raw.githubusercontent.com/intlabs/docker-ubuntu-lemp/master/nginx-default-server /etc/nginx/sites-available/default
-
-RUN sed -i 's/cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php5/fpm/php.ini
 
 # supervisor installation && 
 # create directory for child images to store configuration in
@@ -65,9 +66,10 @@ ADD supervisor.conf /etc/supervisor.conf
 ADD supervisor_conf/php.conf /etc/supervisor/conf.d/php.conf
 ADD supervisor_conf/nginx.conf /etc/supervisor/conf.d/nginx.conf
 
-
+#Bring In startup script
 ADD startup.sh /etc/startup.sh
 RUN chmod +x /etc/startup.sh
+
 # default command
 CMD bash -C '/etc/startup.sh';'bash'
 
@@ -79,3 +81,6 @@ WORKDIR /data
 
 # Expose ports.
 EXPOSE 80
+
+# Create our site
+RUN echo '<?php phpinfo(); ?>' > /usr/share/nginx/html/index.php
