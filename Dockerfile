@@ -9,7 +9,7 @@
 
 
 # sudo docker build -t="intlabs/docker-ubuntu-lemp" github.com/intlabs/docker-ubuntu-lemp
-# sudo docker run -it --rm -p 80:80 intlabs/docker-ubuntu-lemp
+# sudo docker run -it --rm -p 81:80 intlabs/docker-ubuntu-lemp
 
 
 # Pull base image.
@@ -23,17 +23,6 @@ ENV HOME /root
 RUN apt-get update && \
 apt-get upgrade -y && \
 apt-get update
-
-# Installing fuse filesystem is not possible in docker without elevated priviliges
-# but we can fake installling it to allow packages we need to install for GNOME
-RUN apt-get install libfuse2 -y && \
-cd /tmp ; apt-get download fuse && \
-cd /tmp ; dpkg-deb -x fuse_* . && \
-cd /tmp ; dpkg-deb -e fuse_* && \
-cd /tmp ; rm fuse_*.deb && \
-cd /tmp ; echo -en '#!/bin/bash\nexit 0\n' > DEBIAN/postinst && \
-cd /tmp ; dpkg-deb -b . /fuse.deb && \
-cd /tmp ; dpkg -i /fuse.deb
 
 # Upstart and DBus have issues inside docker.
 RUN dpkg-divert --local --rename --add /sbin/initctl && ln -sf /bin/true /sbin/initctl
@@ -86,19 +75,34 @@ WORKDIR /data
 # Expose ports.
 EXPOSE 80
 
-# Create our site
-RUN rm /usr/share/nginx/html/index.html
-#RUN echo '<?php phpinfo(); ?>' > /usr/share/nginx/html/index.php
+# Create clear the deafult site
+RUN rm -r -f /usr/share/nginx/html/
+
+# Put in a php info file
+RUN echo '<?php phpinfo(); ?>' > /usr/share/nginx/html/info.php
+
+# Pull in latest version of symbiose
+WORKDIR /tmp
 RUN apt-get install git -y
+RUN git clone https://github.com/symbiose/symbiose.git
 
 #Install grunt
 RUN sudo apt-get install -y nodejs npm
 RUN ln -s /usr/bin/nodejs /usr/local/bin/node
 RUN npm install -g grunt-cli
 
-RUN git clone https://github.com/symbiose/symbiose.git && cd symbiose && npm install && grunt build && mv build/* /usr/share/nginx/html && cd .. && rm -r -f symbiose
+# Build symbiose
+WORKDIR /tmp/symbiose
+RUN npm install
+RUN grunt build
+
+# Move built system into place
+RUN mv build/* /usr/share/nginx/html
+
+# Cleanup after install
+WORKDIR /tmp
+RUN rm -r -f symbiose
+
 RUN apt-get purge git -y
 RUN cd /usr/share/nginx/html/ && chown -R www-data .
 
-
-RUN echo '<?php phpinfo(); ?>' > /usr/share/nginx/html/info.php
