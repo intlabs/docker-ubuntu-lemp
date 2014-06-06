@@ -9,7 +9,7 @@
 
 
 # sudo docker build -t="intlabs/docker-ubuntu-lemp" github.com/intlabs/docker-ubuntu-lemp
-# sudo docker run -it --rm -p 81:80 intlabs/docker-ubuntu-lemp
+# sudo docker run -it --rm -p 81:80 --privileged=true --lxc-conf="native.cgroup.devices.allow = c 10:229 rwm" intlabs/docker-ubuntu-lemp
 
 
 # Pull base image.
