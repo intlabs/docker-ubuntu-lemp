@@ -5,7 +5,7 @@
 #
 
 # Install GNOME3 and VNC server.
-# (c) Pete Birley
+# (c) 2014 Pete Birley
 
 
 # sudo docker build -t="intlabs/docker-ubuntu-lemp" github.com/intlabs/docker-ubuntu-lemp
@@ -59,27 +59,15 @@ ADD supervisor.conf /etc/supervisor.conf
 ADD supervisor_conf/php.conf /etc/supervisor/conf.d/php.conf
 ADD supervisor_conf/nginx.conf /etc/supervisor/conf.d/nginx.conf
 
-#Bring In startup script
-ADD startup.sh /etc/startup.sh
-RUN chmod +x /etc/startup.sh
+# Move into site root
+WORKDIR /usr/share/nginx/html
 
-# default command
-CMD bash -C '/etc/startup.sh';'bash'
-
-# Define mountable directories.
-VOLUME ["/data"]
-
-# Define working directory.
-WORKDIR /data
-
-# Expose ports.
-EXPOSE 80
-
-# Create clear the deafult site
-RUN rm -r -f /usr/share/nginx/html/
+# Clear the deafult site
+RUN rm -r -f *
+RUN chown -R www-data .
 
 # Put in a php info file
-RUN echo '<?php phpinfo(); ?>' > /usr/share/nginx/html/info.php
+RUN echo '<?php phpinfo(); ?>' > info.php
 
 # Pull in latest version of symbiose
 WORKDIR /tmp
@@ -103,6 +91,21 @@ RUN mv build/* /usr/share/nginx/html
 WORKDIR /tmp
 RUN rm -r -f symbiose
 
+# Purge git
 RUN apt-get purge git -y
-RUN cd /usr/share/nginx/html/ && chown -R www-data .
 
+#Bring In startup script
+ADD startup.sh /etc/startup.sh
+RUN chmod +x /etc/startup.sh
+
+# default command
+CMD bash -C '/etc/startup.sh';'bash'
+
+# Define mountable directories.
+VOLUME ["/data"]
+
+# Define working directory.
+WORKDIR /data
+
+# Expose ports.
+EXPOSE 80
