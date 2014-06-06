@@ -87,6 +87,10 @@ RUN grunt build
 # Move built system into place
 RUN mv build/* /usr/share/nginx/html
 
+# Fix Permissions
+WORKDIR /usr/share/nginx/html
+RUN chown -R www-data .
+
 # Cleanup after install
 WORKDIR /tmp
 RUN rm -r -f symbiose
