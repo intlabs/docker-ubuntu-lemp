@@ -47,7 +47,7 @@ RUN sed -i 's/cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php5/fpm/php.ini
 
 #Configure nginx for php
 RUN rm -f /etc/nginx/sites-available/default
-ADD https://raw.githubusercontent.com/intlabs/docker-ubuntu-lemp/master/nginx-default-server /etc/nginx/sites-available/default
+ADD nginx-default-server /etc/nginx/sites-available/default
 
 #Install memcache
 RUN sudo apt-get install -y php5-memcache memcached php-pear netcat build-essential php5-memcached
